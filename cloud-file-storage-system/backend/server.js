@@ -43,6 +43,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running on port ${PORT}`);
   connectDatabase();
 });
