@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="CloudVault secure cloud file storage dashboard"
+  />
+  <title>CloudVault - File Storage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <section id="authPage" class="auth-page">
+    
+    <div class="auth-visual">
+      <a href="#" class="brand brand-light">
+        <span class="brand-logo">☁</span>
+        <span>CloudVault</span>
+      </a>
+
+      <div class="visual-content">
+        <span class="eyebrow">SECURE CLOUD STORAGE</span>
+        <h1>Your files, available everywhere.</h1>
+        <p>
+          Upload, organize, download and manage your important documents
+          through one simple and secure dashboard.
+        </p>
+
+        <div class="feature-grid">
+          <article>
+            <span>⚡</span>
+            <div>
+              <strong>Fast uploads</strong>
+              <small>Simple drag-and-drop workflow</small>
+            </div>
+          </article>
+          <article>
+            <span>🔒</span>
+            <div>
+              <strong>Private storage</strong>
+              <small>Every account sees only its own files</small>
+            </div>
+          </article>
+          <article>
+            <span>☁</span>
+            <div>
+              <strong>Atlas powered</strong>
+              <small>Files stored with MongoDB GridFS</small>
+            </div>
+          </article>
+          <article>
+            <span>📱</span>
+            <div>
+              <strong>Responsive UI</strong>
+              <small>Works on desktop, tablet and mobile</small>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <p class="visual-footer">Full-stack cloud computing project</p>
+    </div>
+
+    <div class="auth-panel">
+      <div class="auth-card">
+        <div class="mobile-brand">
+          <span class="brand-logo">☁</span> CloudVault
+        </div>
+
+        <div class="auth-tabs">
+          <button id="loginTab" class="auth-tab active" type="button">Sign in</button>
+          <button id="registerTab" class="auth-tab" type="button">Create account</button>
+        </div>
+
+        <div id="loginView">
+          <div class="auth-heading">
+            <span class="mini-label">WELCOME BACK</span>
+            <h2>Sign in to your cloud</h2>
+            <p>Enter your account details to continue.</p>
+          </div>
+
+          <form id="loginForm" class="auth-form">
+            <label>
+              Email address
+              <input
+                id="loginEmail"
+                type="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              />
+            </label>
+
+            <label>
+              Password
+              <div class="password-wrap">
+                <input
+                  id="loginPassword"
+                  type="password"
+                  placeholder="Enter your password"
+                  autocomplete="current-password"
+                  minlength="6"
+                  required
+                />
+                <button class="password-toggle" data-target="loginPassword" type="button">Show</button>
+              </div>
+            </label>
+
+            <div class="form-sub-row">
+              <button id="forgotPasswordLink" class="text-link-button" type="button">Forgot password?</button>
+            </div>
+
+            <button id="loginButton" class="primary-button" type="submit">
+              Sign in
+            </button>
+          </form>
+        </div>
+
+        <div id="registerView" class="hidden">
+          <div class="auth-heading">
+            <span class="mini-label">GET STARTED</span>
+            <h2>Create your account</h2>
+            <p>Register to create your personal storage space.</p>
+          </div>
+
+          <form id="registerForm" class="auth-form">
+            <label>
+              Full name
+              <input
+                id="registerName"
+                type="text"
+                placeholder="Your name"
+                autocomplete="name"
+                minlength="2"
+                required
+              />
+            </label>
+
+            <label>
+              Email address
+              <input
+                id="registerEmail"
+                type="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              />
+            </label>
+
+            <label>
+              Password
+              <div class="password-wrap">
+                <input
+                  id="registerPassword"
+                  type="password"
+                  placeholder="Minimum 6 characters"
+                  autocomplete="new-password"
+                  minlength="6"
+                  required
+                />
+                <button class="password-toggle" data-target="registerPassword" type="button">Show</button>
+              </div>
+            </label>
+
+            <button id="registerButton" class="primary-button" type="submit">
+              Create account
+            </button>
+          </form>
+        </div>
+
+        <p class="security-note">🔐 Passwords are securely hashed before storage.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="dashboardPage" class="dashboard hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-top">
+        <a class="brand" href="#">
+          <span class="brand-logo">☁</span>
+          <span>CloudVault</span>
+        </a>
+        <button id="closeSidebar" class="icon-button sidebar-close" type="button">×</button>
+      </div>
+
+      <nav class="side-nav">
+        <button class="nav-item active" type="button">
+          <span>▦</span> My files
+        </button>
+        <button id="uploadNavButton" class="nav-item" type="button">
+          <span>⇧</span> Upload file
+        </button>
+      </nav>
+
+      <div class="storage-card">
+        <div class="storage-heading">
+          <span>Storage used</span>
+          <strong id="storageText">0 B</strong>
+        </div>
+        <div class="progress-track">
+          <div id="storageProgress" class="progress-value"></div>
+        </div>
+        <small>Project display limit: 1 GB</small>
+      </div>
+
+      <div class="sidebar-profile">
+        <div id="userAvatar" class="avatar">U</div>
+        <div>
+          <strong id="sidebarName">User</strong>
+          <small id="sidebarEmail">user@email.com</small>
+        </div>
+        <button id="logoutButton" class="logout-button" type="button" title="Log out">↪</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-title">
+          <div class="top-menu-wrapper">
+            <button id="openSidebar" class="icon-button menu-button" type="button" title="Menu (☰)" aria-label="Open menu">☰</button>
+            
+            <div id="topLeftMenuDropdown" class="dropdown-menu hidden">
+              <div class="dropdown-header">
+                <span class="dropdown-title">Quick Access</span>
+              </div>
+              <button id="menuMembershipBtn" class="dropdown-item" type="button">
+                <span class="item-icon">👑</span>
+                <div class="item-content">
+                  <span class="item-title">Membership</span>
+                  <span class="item-desc">Plans, storage & limits</span>
+                </div>
+              </button>
+              <button id="menuSettingsBtn" class="dropdown-item" type="button">
+                <span class="item-icon">⚙️</span>
+                <div class="item-content">
+                  <span class="item-title">Settings</span>
+                  <span class="item-desc">Profile, password & theme</span>
+                </div>
+              </button>
+              <button id="menuHelpBtn" class="dropdown-item" type="button">
+                <span class="item-icon">❓</span>
+                <div class="item-content">
+                  <span class="item-title">Help & Support</span>
+                  <span class="item-desc">FAQs, guides & ticket</span>
+                </div>
+              </button>
+            </div>
+          </div>
+          <div>
+            <p class="mini-label">CLOUD WORKSPACE</p>
+            <h1>My files</h1>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <label class="search-box">
+            <span>⌕</span>
+            <input id="searchInput" type="search" placeholder="Search files..." />
+          </label>
+          <button id="topUploadButton" class="primary-button compact" type="button">
+            + Upload
+          </button>
+        </div>
+      </header>
+
+      <section class="dashboard-body">
+        <div class="welcome-row">
+          <div>
+            <h2>Hello, <span id="welcomeName">User</span> 👋</h2>
+            <p>Manage your cloud files from one place.</p>
+          </div>
+          <p id="currentDate" class="date-label"></p>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-icon blue">▤</div>
+            <div>
+              <span>Total files</span>
+              <strong id="totalFiles">0</strong>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon purple">☁</div>
+            <div>
+              <span>Storage used</span>
+              <strong id="totalStorage">0 B</strong>
+            </div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon green">✓</div>
+            <div>
+              <span>Account status</span>
+              <strong>Active</strong>
+            </div>
+          </article>
+        </div>
+
+        <section
+          id="dropZone"
+          class="drop-zone"
+          tabindex="0"
+          role="button"
+          aria-label="Upload a file"
+        >
+          <input id="fileInput" type="file" hidden />
+          <div class="upload-cloud">⇧</div>
+          <h3>Drop a file here to upload</h3>
+          <p>or click to select a file from your computer</p>
+          <button id="browseButton" class="secondary-button" type="button">
+            Browse files
+          </button>
+          <small>Maximum file size: 25 MB</small>
+        </section>
+
+        <section class="files-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Recent files</h2>
+              <p id="fileSummary">Your uploaded files will appear here.</p>
+            </div>
+            <button id="refreshButton" class="icon-button" type="button" title="Refresh">↻</button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="file-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Size</th>
+                  <th>Uploaded</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="fileTableBody"></tbody>
+            </table>
+
+            <div id="emptyState" class="empty-state">
+              <div>☁</div>
+              <h3>No files uploaded</h3>
+              <p>Upload your first file to start building your cloud library.</p>
+            </div>
+
+            <div id="loadingState" class="loading-state hidden">
+              <div class="spinner"></div>
+              <p>Loading your files...</p>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </section>
+
+  <div id="uploadModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button id="closeModal" class="modal-close" type="button">×</button>
+      <div class="modal-icon">⇧</div>
+      <h2>Upload file</h2>
+      <p id="selectedFileText">Choose a file from your computer.</p>
+
+      <div id="uploadProgressWrap" class="upload-progress-wrap hidden">
+        <div class="progress-track">
+          <div id="uploadProgress" class="progress-value upload-progress"></div>
+        </div>
+        <small id="uploadStatusText">Uploading...</small>
+      </div>
+
+      <div class="modal-actions">
+        <button id="cancelUpload" class="secondary-button" type="button">Cancel</button>
+        <button id="confirmUpload" class="primary-button compact" type="button" disabled>
+          Upload now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD MODAL -->
+  <div id="forgotPasswordModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card wide-card">
+      <button id="closeForgotPasswordModal" class="modal-close" type="button">×</button>
+      <div class="modal-icon">🔑</div>
+      <h2>Reset Your Password</h2>
+      <p class="modal-subtitle">Enter your registered email address to receive a password reset code.</p>
+
+      <form id="forgotPasswordStep1Form" class="auth-form modal-form">
+        <label>
+          Email address
+          <input id="forgotPasswordEmail" type="email" placeholder="you@example.com" required />
+        </label>
+        <button id="sendResetCodeBtn" class="primary-button" type="submit">
+          Send Reset Code
+        </button>
+      </form>
+
+      <form id="forgotPasswordStep2Form" class="auth-form modal-form hidden">
+        <div class="info-banner">
+          <span>ℹ️</span> Reset code generated! Check your email or use code: <strong id="demoCodeDisplay">------</strong>
+        </div>
+        <label>
+          6-Digit Reset Code
+          <input id="resetCodeInput" type="text" placeholder="Enter 6-digit code" maxlength="6" required />
+        </label>
+        <label>
+          New Password
+          <div class="password-wrap">
+            <input id="resetNewPassword" type="password" placeholder="Minimum 6 characters" minlength="6" required />
+            <button class="password-toggle" data-target="resetNewPassword" type="button">Show</button>
+          </div>
+        </label>
+        <button id="confirmResetPasswordBtn" class="primary-button" type="submit">
+          Update Password
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MEMBERSHIP MODAL -->
+  <div id="membershipModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card extra-wide-card">
+      <button id="closeMembershipModal" class="modal-close" type="button">×</button>
+      <div class="modal-header-row">
+        <div class="modal-icon">👑</div>
+        <div>
+          <h2>Membership Plans</h2>
+          <p class="modal-subtitle">Upgrade your cloud storage tier and unlock premium features.</p>
+        </div>
+      </div>
+
+      <div class="current-plan-card">
+        <div class="plan-info">
+          <span>Current Active Plan</span>
+          <h3 id="modalCurrentPlanName">Free Plan</h3>
+          <small id="modalCurrentStorageText">1 GB total storage limit</small>
+        </div>
+        <div class="plan-badge active" id="modalPlanBadge">Active</div>
+      </div>
+
+      <div class="plans-grid">
+        <article class="plan-card" data-plan="free">
+          <div class="plan-header">
+            <h3>Free</h3>
+            <div class="plan-price">$0 <span>/ month</span></div>
+          </div>
+          <p class="plan-desc">For personal file storage needs</p>
+          <ul class="plan-features">
+            <li>✓ 1 GB Storage limit</li>
+            <li>✓ 25 MB Max file size</li>
+            <li>✓ Standard upload speed</li>
+            <li>✓ Community support</li>
+          </ul>
+          <button class="primary-button select-plan-btn" data-plan="free" type="button">Select Plan</button>
+        </article>
+
+        <article class="plan-card featured" data-plan="pro">
+          <div class="popular-tag">MOST POPULAR</div>
+          <div class="plan-header">
+            <h3>Pro</h3>
+            <div class="plan-price">$9.99 <span>/ month</span></div>
+          </div>
+          <p class="plan-desc">For power users and professionals</p>
+          <ul class="plan-features">
+            <li>✓ 100 GB Storage limit</li>
+            <li>✓ 100 MB Max file size</li>
+            <li>✓ High-speed uploads</li>
+            <li>✓ Priority email support</li>
+          </ul>
+          <button class="primary-button select-plan-btn" data-plan="pro" type="button">Upgrade to Pro</button>
+        </article>
+
+        <article class="plan-card" data-plan="enterprise">
+          <div class="plan-header">
+            <h3>Enterprise</h3>
+            <div class="plan-price">$29.99 <span>/ month</span></div>
+          </div>
+          <p class="plan-desc">For teams and heavy data needs</p>
+          <ul class="plan-features">
+            <li>✓ 1 TB Storage limit</li>
+            <li>✓ 1 GB Max file size</li>
+            <li>✓ Ultra-fast multi-thread transfer</li>
+            <li>✓ 24/7 Dedicated assistance</li>
+          </ul>
+          <button class="primary-button select-plan-btn" data-plan="enterprise" type="button">Upgrade to Enterprise</button>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card wide-card">
+      <button id="closeSettingsModal" class="modal-close" type="button">×</button>
+      <div class="modal-header-row">
+        <div class="modal-icon">⚙️</div>
+        <div>
+          <h2>Account Settings</h2>
+          <p class="modal-subtitle">Manage profile, security credentials and app preferences.</p>
+        </div>
+      </div>
+
+      <div class="settings-tabs">
+        <button class="settings-tab active" data-tab="profileTab" type="button">Profile</button>
+        <button class="settings-tab" data-tab="securityTab" type="button">Security</button>
+        <button class="settings-tab" data-tab="preferencesTab" type="button">Preferences</button>
+      </div>
+
+      <div id="profileTab" class="settings-tab-content">
+        <form id="profileForm" class="auth-form modal-form">
+          <label>
+            Full Name
+            <input id="settingsName" type="text" required />
+          </label>
+          <label>
+            Email Address
+            <input id="settingsEmail" type="email" required />
+          </label>
+          <button class="primary-button" type="submit">Save Profile Changes</button>
+        </form>
+      </div>
+
+      <div id="securityTab" class="settings-tab-content hidden">
+        <form id="changePasswordForm" class="auth-form modal-form">
+          <label>
+            Current Password
+            <div class="password-wrap">
+              <input id="settingsCurrentPassword" type="password" required />
+              <button class="password-toggle" data-target="settingsCurrentPassword" type="button">Show</button>
+            </div>
+          </label>
+          <label>
+            New Password
+            <div class="password-wrap">
+              <input id="settingsNewPassword" type="password" minlength="6" required />
+              <button class="password-toggle" data-target="settingsNewPassword" type="button">Show</button>
+            </div>
+          </label>
+          <button class="primary-button" type="submit">Update Password</button>
+        </form>
+      </div>
+
+      <div id="preferencesTab" class="settings-tab-content hidden">
+        <div class="setting-row">
+          <div>
+            <strong>Interface Theme</strong>
+            <small>Choose between light and dark mode appearance</small>
+          </div>
+          <div class="theme-toggle-group">
+            <button id="themeLightBtn" class="theme-btn active" type="button">☀️ Light</button>
+            <button id="themeDarkBtn" class="theme-btn" type="button">🌙 Dark</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Email Notifications</strong>
+            <small>Receive updates about uploads and security alerts</small>
+          </div>
+          <label class="switch-toggle">
+            <input id="emailNotifToggle" type="checkbox" checked />
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Auto-Cleanup Trash</strong>
+            <small>Automatically purge deleted files after 30 days</small>
+          </div>
+          <label class="switch-toggle">
+            <input id="autoCleanupToggle" type="checkbox" />
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELP MODAL -->
+  <div id="helpModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card wide-card">
+      <button id="closeHelpModal" class="modal-close" type="button">×</button>
+      <div class="modal-header-row">
+        <div class="modal-icon">❓</div>
+        <div>
+          <h2>Help & Support Center</h2>
+          <p class="modal-subtitle">Find quick answers, user guides or send a direct support ticket.</p>
+        </div>
+      </div>
+
+      <div class="help-search-bar">
+        <span>⌕</span>
+        <input id="faqSearchInput" type="search" placeholder="Search FAQs and help topics..." />
+      </div>
+
+      <div class="help-sections">
+        <div class="faq-container">
+          <h3>Frequently Asked Questions</h3>
+
+          <details class="faq-item">
+            <summary>How do I upload files to my CloudVault storage?</summary>
+            <p>You can drag and drop any file directly onto the dashbaord drop zone, or click the "+ Upload" button in the topbar to browse files from your device.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>How do I upgrade my storage plan?</summary>
+            <p>Click the top-left menu (three dashes ☰), select <strong>Membership</strong>, choose Pro or Enterprise plan, and click "Upgrade". Your limit updates instantly in real time.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>How do I reset my password if I forgot it?</summary>
+            <p>On the Sign In page, click "Forgot password?", enter your email address to receive a 6-digit code, and set a new password.</p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Are my uploaded files secure?</summary>
+            <p>Yes, all stored files are segregated by user account using MongoDB Atlas GridFS storage with secure authentication tokens.</p>
+          </details>
+        </div>
+
+        <div class="support-ticket-box">
+          <h3>Send Support Message</h3>
+          <form id="supportTicketForm" class="auth-form modal-form">
+            <label>
+              Subject
+              <input id="ticketSubject" type="text" placeholder="Summary of your inquiry" required />
+            </label>
+            <label>
+              Priority
+              <select id="ticketPriority">
+                <option value="Normal">Normal</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+              </select>
+            </label>
+            <label>
+              Message
+              <textarea id="ticketMessage" rows="3" placeholder="Describe your question or issue in detail..." required></textarea>
+            </label>
+            <button class="primary-button" type="submit">Submit Ticket</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
